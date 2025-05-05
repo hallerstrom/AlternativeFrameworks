@@ -3,7 +3,9 @@ import { TodosService } from '../todos.services';
 import { Todo } from '../models/todo.model';
 import { CommonModule } from '@angular/common';
 import { map } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs'; 
 
+// Komponent för att visa en slumpmässig aktiv todo-post
 @Component({
   selector: 'app-daily-todo',
   standalone: true,
@@ -19,25 +21,25 @@ export class DailyTodoComponent implements OnInit {
     this.loadRandomActiveTodo();
   }
 
-  loadRandomActiveTodo(): void {
-    this.todosService.getAllTodos().pipe(
-      map(todos => todos.filter(todo => !todo.done)), // Filtrera aktiva todos
-      map(activeTodos => {
-        if (activeTodos && activeTodos.length > 0) {
-          const randomIndex = Math.floor(Math.random() * activeTodos.length);
-          return activeTodos[randomIndex];
-        }
-        return null;
-      })
-    ).subscribe(
-      (randomActiveTodo) => {
-        this.todo.set(randomActiveTodo);
-      },
-      (error) => {
-        console.error('Fel vid hämtning av slumpmässig aktiv todo:', error);
+  async loadRandomActiveTodo(): Promise<void> {
+    try {
+      // Hämta alla todo-poster och filtrera bort de som är klara
+      const todos = await firstValueFrom(
+        this.todosService.getAllTodos().pipe(
+          map(todos => todos.filter(todo => !todo.done))
+        )
+      );
+
+      if (todos.length > 0) {
+        const randomIndex = Math.floor(Math.random() * todos.length);
+        this.todo.set(todos[randomIndex]);
+      } else {
         this.todo.set(null);
       }
-    );
+    } catch (error) {
+      console.error('Fel vid hämtning av todo:', error);
+      this.todo.set(null);
+    }
   }
 
   showNewRandomTodo(): void {
