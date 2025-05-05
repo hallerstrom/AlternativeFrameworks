@@ -1,0 +1,8 @@
+<ul class="mb-4">
+    <li><h3 class="text-xl font-semibold mb-2">Att göra:</h3></li>
+    <app-todo-item
+      *ngFor="let todo of todos()"
+      [todo]="todo"
+      (doneItem)="itemDone($event)"
+    ></app-todo-item>
+  </ul>
