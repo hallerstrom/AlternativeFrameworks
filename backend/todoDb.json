@@ -1,48 +1,54 @@
 {
   "todos": [
     {
-      "done": true,
+      "todo": "Äta",
+      "done": false,
       "id": "1"
     },
     {
-      "done": true,
+      "todo": "Sova",
+      "done": false,
       "id": "2"
     },
     {
-      "done": true,
+      "todo": "Koda",
+      "done": false,
       "id": "3"
     },
     {
-      "done": true,
+      "todo": "Träna",
+      "done": false,
       "id": "4"
     },
     {
-      "done": true,
+      "todo": "Laga mat",
+      "done": false,
       "id": "5"
     },
     {
-      "done": true,
+      "todo": "Städa",
+      "done": false,
       "id": "6"
     },
     {
-      "done": true,
+      "todo": "Handla",
+      "done": false,
       "id": "7"
     },
     {
-      "done": true,
+      "todo": "Tvätta",
+      "done": false,
       "id": "8"
     },
     {
-      "done": true,
+      "todo": "Läsa",
+      "done": false,
       "id": "9"
     },
     {
-      "done": true,
+      "todo": "Skriva",
+      "done": false,
       "id": "10"
-    },
-    {
-      "done": true,
-      "id": "4481"
     }
   ]
 }

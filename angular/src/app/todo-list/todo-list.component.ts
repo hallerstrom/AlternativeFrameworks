@@ -15,9 +15,6 @@ export class TodoListComponent {
   todos = this.todosService.filteredTodos; 
 
   itemDone(id: number): void {
-    this.todosService.completeTodo(id).subscribe(() => {
-      console.log(`Todo med id ${id} markerad som klar och borttagen från listan lokalt.`);
-      
-    });
+    this.todosService.completeTodo(id); // Markera todo som klar
   }
 }

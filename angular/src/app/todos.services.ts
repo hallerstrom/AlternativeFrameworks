@@ -1,42 +1,38 @@
-import { computed, Injectable, signal } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { Observable, tap } from "rxjs";
-import { Todo } from "./models/todo.model";
+import { Injectable, computed, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Todo } from './models/todo.model';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
-    providedIn: "root"
+  providedIn: 'root',
 })
 export class TodosService {
-    todos = signal<Todo[]>([]);
-    filteredTodos = computed(() => this.todos().filter(t => !t.done));
-    private apiUrl = 'http://localhost:3000/todos';
+  private apiUrl = 'http://localhost:3000/todos';
+  todos = signal<Todo[]>([]); // Alla todos
+  filteredTodos = computed(() => this.todos().filter(t => !t.done)); // Endast de som inte är klara
 
-    constructor(private http: HttpClient) {
-        this.loadInitialTodos();
-    }
+  constructor(private http: HttpClient) {
+    this.loadTodos(); // Laddas direkt
+  }
 
-    loadInitialTodos(): void {
-        this.http.get<Todo[]>(this.apiUrl).subscribe(data => this.todos.set(data));
-    }
+  loadTodos(): void {
+    this.http.get<Todo[]>(this.apiUrl).subscribe({
+      next: (data) => this.todos.set(data),
+      error: (err) => console.error('Kunde inte hämta todos:', err),
+    });
+  }
 
-    getAllTodos(): Observable<Todo[]> {
-        return this.http.get<Todo[]>(this.apiUrl);
-    }
+  completeTodo(id: number): void {
+    this.http.patch<Todo>(`${this.apiUrl}/${id}`, { done: true }).subscribe({
+      next: () => this.loadTodos(), // Ladda om listan efter uppdatering
+      error: (err) => console.error('Kunde inte uppdatera todo:', err),
+    });
+  }
 
-    addNewTodo(todo: string): Observable<Todo> {
-        return this.http.post<Todo>(this.apiUrl, { todo: todo, done: false }).pipe(
-            tap(newTodo => this.todos.update(currentTodos => [...currentTodos, newTodo]))
-        );
-    }
-
-    completeTodo(id: number): Observable<Todo> {
-        return this.http.put<Todo>(`${this.apiUrl}/${id}`, { done: true }).pipe(
-            tap(() => this.todos.update(currentTodos =>
-                currentTodos.map(todo => (todo.id === id ? { ...todo, done: true } : todo))
-            )),
-            tap(() => {
-                this.todos.update(currentTodos => currentTodos.filter(todo => todo.id !== id));
-            })
-        );
-    }
+  addNewTodo(title: string): Observable<Todo> {
+    return this.http.post<Todo>(this.apiUrl, { todo: title, done: false }).pipe(
+      tap(() => this.loadTodos()) // Ladda om listan när en ny todo har lagts till
+    );
+  }
 }
