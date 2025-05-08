@@ -10,6 +10,8 @@ import { CommonModule } from '@angular/common';
   templateUrl: './todo-list.component.html',
   styleUrl: './todo-list.component.css'
 })
+
+// Komponent för att visa en lista med todo-poster
 export class TodoListComponent {
   todosService = inject(TodosService);
   todos = this.todosService.filteredTodos; 

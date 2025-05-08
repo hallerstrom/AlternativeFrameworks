@@ -11,6 +11,7 @@ export class TodoItemComponent {
   todo = input.required<Todo>();
   doneItem = output<number>()
 
+  // funktion för att markera en todo-post som klar
   itemDone() {
     this.doneItem.emit(this.todo().id)
   }

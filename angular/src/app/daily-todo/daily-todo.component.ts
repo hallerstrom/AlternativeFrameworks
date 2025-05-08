@@ -14,10 +14,12 @@ export class DailyTodoComponent implements OnInit {
   todo = signal<Todo | null>(null);
   todosService = inject(TodosService);
 
+  // Hämta todo
   ngOnInit(): void {
     this.loadRandomActiveTodo();
   }
 
+  // Hämta en slumpmässig todo som inte är klar
   loadRandomActiveTodo(): void {
     const todos = this.todosService.todos().filter(t => !t.done);
 
@@ -29,6 +31,7 @@ export class DailyTodoComponent implements OnInit {
     }
   }
 
+  // Visa en ny slumpmässig todo
   showNewRandomTodo(): void {
     this.loadRandomActiveTodo();
   }
