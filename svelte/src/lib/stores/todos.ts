@@ -7,9 +7,9 @@ export interface Todo {
   done: boolean;
 }
 
-const apiUrl = 'http://localhost:3000/todos'; // URL till din JSON-server
+const apiUrl = 'http://localhost:3000/todos';   
 
-// Skapa en writable store som initialt är en tom array av Todo-objekt
+
 export const todos = writable<Todo[]>([]);
 
 // Funktion för att hämta todos från servern vid start
@@ -23,11 +23,10 @@ async function fetchTodos(): Promise<void> {
     todos.set(data); // Uppdatera storen med hämtad data
   } catch (error) {
     console.error("Kunde inte hämta todos:", error);
-    todos.set([]); // Hantera felet (t.ex., visa ett felmeddelande i UI)
+    todos.set([]); // Hantera fel
   }
 }
 
-// Hämta todos när modulen laddas (kan också göras i en komponent med onMount)
 fetchTodos();
 
 export const activeTodos = derived(todos, ($todos) =>
@@ -46,7 +45,7 @@ export async function addTodo(todo: string): Promise<void> {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ todo: todo, done: false }), // Anpassa efter din db.json-struktur
+      body: JSON.stringify({ todo: todo, done: false }), 
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -60,7 +59,7 @@ export async function addTodo(todo: string): Promise<void> {
 
 export async function completeTodo(id: number): Promise<void> {
   try {
-    // Hämta den befintliga todon för att behålla andra fält
+    // Hämta todo för att behålla andra fält
     const getResponse = await fetch(`${apiUrl}/${id}`);
     if (!getResponse.ok) {
       throw new Error(`HTTP error! status: ${getResponse.status}`);
@@ -72,7 +71,7 @@ export async function completeTodo(id: number): Promise<void> {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...existingTodo, done: true }), // Uppdatera done-status
+      body: JSON.stringify({ ...existingTodo, done: true }), // Uppdatera done
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
